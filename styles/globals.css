@@ -30,11 +30,13 @@ td{
   max-width: 33%;
   color: white;
   overflow:hidden;
+  padding: 10px;
 }
 
 tr:nth-child(even) {
   background-color: #212124;
 }
+
 
 @media (max-width: 800px){
   td{
