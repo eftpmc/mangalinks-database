@@ -14,8 +14,10 @@ import {
   TableCaption,
   TableContainer,
 } from '@chakra-ui/react'
+import { ViewOffIcon } from '@chakra-ui/icons';
 
-export default function Home() {
+
+export default function Home(data) {
   return (
     <div>
       <Head>
@@ -27,41 +29,60 @@ export default function Home() {
       <main>
         <ul id="nav">
           <div><IconButton colorScheme="purple" aria-label='Books' icon={<MdMenuBook />} /></div>
-          <div><IconButton onClick={refreshlist} colorScheme="purple" aria-label='Refresh' icon={<MdRefresh />} /></div>
+          <div><IconButton onClick={() => refreshlist(data)} colorScheme="purple" aria-label='Refresh' icon={<MdRefresh />} /></div>
           <div><Input focusBorderColor="purple.500" variant='outline' placeholder='Search' /></div>
           <div><IconButton colorScheme="purple" aria-label='Search database' icon={<MdSearch />} /></div>
         </ul>
         <div id="core">
-        <TableContainer>
-          <Table variant='striped' colorScheme='blackAlpha'>
-            <Thead>
-              <Tr>
-                <Th>Title</Th>
-                <Th>Thumbnail</Th>
-                <Th>Link</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr className='holder'>
-                <Td className='title'>Naruto</Td>
-                <Td className='thumb'>https://</Td>
-                <Td className='link'>https://</Td>
-              </Tr>
-              <Tr className='holder'>
-                <Td className='title'>Naruto</Td>
-                <Td className='thumb'>https://</Td>
-                <Td className='link'>https://</Td>
-              </Tr>
-              <Tr className='holder'>
-                <Td className='title'>Naruto</Td>
-                <Td className='thumb'>https://</Td>
-                <Td className='link'>https://</Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </TableContainer>
+          <table variant='striped' colorScheme='blackAlpha'>
+            <tbody id="tablebody">
+
+            </tbody>
+          </table>
         </div>
       </main>
     </div>
   )
+}
+
+
+export async function getServerSideProps(){
+  const puppeteer = require('puppeteer');
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  await page.goto('https://mangadex.org/search?q=naruto');
+
+  await page.waitFor(5000);
+  
+  const title = await page.evaluate( () => {
+    const text = document.getElementsByClassName("title");
+
+    const getTitle = Array.from(text).map(v => v.lastChild.textContent);
+
+    return getTitle;
+  });
+
+  const thumb = await page.evaluate( () => {
+    const th = document.querySelectorAll('img[alt="Cover image"]');
+
+    const getThumb = Array.from(th).map(v => v.src);
+
+    return getThumb;
+  });
+
+  const link = await page.evaluate( () => {
+    const lk = document.getElementsByClassName("title");
+
+    const getLink = Array.from(lk).map(v => v.href);
+
+    return getLink;
+  });
+
+  await browser.close();
+
+  return {
+    props: {title, thumb, link}, // will be passed to the page component as props
+  }
 }

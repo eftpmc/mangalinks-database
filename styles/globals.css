@@ -19,6 +19,23 @@ body {
   background-color: #161618;
 }
 
-.holder{
+table{
+  width: 100%;
+}
+
+tbody{
+}
+
+td{
+  max-width: 33%;
   color: white;
+  overflow:hidden;
+}
+
+@media (max-width: 800px){
+  td{
+    display: block;
+    max-width: 100%;
+  }
+
 }
