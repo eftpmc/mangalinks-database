@@ -32,6 +32,10 @@ td{
   overflow:hidden;
 }
 
+tr:nth-child(even) {
+  background-color: #212124;
+}
+
 @media (max-width: 800px){
   td{
     display: block;
