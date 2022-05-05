@@ -19,6 +19,10 @@ body {
   background-color: #161618;
 }
 
+ul div{
+  color: white;
+}
+
 table{
   width: 100%;
 }

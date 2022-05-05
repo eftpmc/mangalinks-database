@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import {refreshlist} from './api/functions.js';
 import { IconButton, Input } from '@chakra-ui/react'
 import { MdMenuBook, MdRefresh, MdSearch } from 'react-icons/md'
 import {
@@ -15,9 +14,36 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 import { ViewOffIcon } from '@chakra-ui/icons';
+import React, { useState } from 'react';
 
+var value = "";
+function setValue(val){
+  value = val;
+}
+
+async function refreshlist(data, input){
+  console.log(input);
+    if (typeof window !== "undefined") {
+        var table = document.getElementById("tablebody");
+
+        table.innerHTML = "";
+      
+      for(var i = 0; i < data.title.length; i++){
+        var row = `
+        <tr class='holder css-0'>
+        <td class='title css-zgoslk'>${data.title[i]}</td>
+        <td class='thumb css-zgoslk'>${data.thumb[i]}</td>
+        <td class='link css-zgoslk'>${data.link[i]}</td>
+        </tr>
+        `
+      
+        table.innerHTML += row;
+      }
+      }
+}
 
 export default function Home(data) {
+
   return (
     <div>
       <Head>
@@ -30,11 +56,11 @@ export default function Home(data) {
         <ul id="nav">
           <div><IconButton colorScheme="purple" aria-label='Books' icon={<MdMenuBook />} /></div>
           <div><IconButton onClick={() => refreshlist(data)} colorScheme="purple" aria-label='Refresh' icon={<MdRefresh />} /></div>
-          <div><Input focusBorderColor="purple.500" variant='outline' placeholder='Search' /></div>
-          <div><IconButton colorScheme="purple" aria-label='Search database' icon={<MdSearch />} /></div>
+          <div><Input onChange={event => setValue(event.currentTarget.value)} focusBorderColor="purple.500" variant='outline' placeholder='Search' /></div>
+          <div><IconButton onClick={() => location.href = `/search/${value}`} colorScheme="purple" aria-label='Search database' icon={<MdSearch />} /></div>
         </ul>
         <div id="core">
-          <table variant='striped' colorScheme='blackAlpha'>
+          <table>
             <tbody id="tablebody">
 
             </tbody>
